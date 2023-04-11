@@ -1,6 +1,7 @@
 package it.manytomanyjpamaven.test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import it.manytomanyjpamaven.dao.EntityManagerUtil;
 import it.manytomanyjpamaven.model.Ruolo;
@@ -20,23 +21,29 @@ public class ManyToManyTest {
 		try {
 
 //			// inizializzo i ruoli sul db
-//			initRuoli(ruoloServiceInstance);
-//
-//			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
+			initRuoli(ruoloServiceInstance);
+
+			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 //
 //			testInserisciNuovoUtente(utenteServiceInstance);
 //			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 //
-//			testCollegaUtenteARuoloEsistente(ruoloServiceInstance, utenteServiceInstance);
-//			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
+			
+			testCollegaUtenteARuoloEsistente(ruoloServiceInstance, utenteServiceInstance);
+			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 //
+			
 //			testModificaStatoUtente(utenteServiceInstance);
 //			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 //
 //			testRimuoviRuoloDaUtente(ruoloServiceInstance, utenteServiceInstance);
 //			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 
-			testRimuoviRuolo(ruoloServiceInstance);
+//			testRimuoviRuolo(ruoloServiceInstance);
+			testUtentiDelMese(utenteServiceInstance);
+//			testPrendiTuttiGliUtentiAdmin(utenteServiceInstance);
+//			testDescrizioniRuoloConUtenti(ruoloServiceInstance);
+			System.out.println("In tabella Utente ci sono " + utenteServiceInstance.listAll().size() + " elementi.");
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -61,7 +68,7 @@ public class ManyToManyTest {
 	private static void testInserisciNuovoUtente(UtenteService utenteServiceInstance) throws Exception {
 		System.out.println(".......testInserisciNuovoUtente inizio.............");
 
-		Utente utenteNuovo = new Utente("pippo.rossi", "xxx", "pippo", "rossi", LocalDate.now());
+		Utente utenteNuovo = new Utente("dfdf.rossi", "xxx", "pippo", "rossi", LocalDate.now());
 		utenteServiceInstance.inserisciNuovo(utenteNuovo);
 		if (utenteNuovo.getId() == null)
 			throw new RuntimeException("testInserisciNuovoUtente fallito ");
@@ -154,5 +161,57 @@ public class ManyToManyTest {
 	private static void testRimuoviRuolo(RuoloService ruoloServiceInstance) throws Exception{
 		ruoloServiceInstance.rimuovi(1L);
 	}
+	
+	private static void testUtentiDelMese(UtenteService utenteServiceInstance) throws Exception {
+		System.out.println(".......testUtentiDelMese inizio.............");
+
+//		Utente utenteNuovo = new Utente("pippo.rossi", "xxx", "pippo", "rossi", LocalDate.now());
+//		utenteServiceInstance.inserisciNuovo(utenteNuovo);
+		List<Utente> utentiDelMese = utenteServiceInstance.PrendiUtentiCreatiNelMeseENellAnno(04,2023);
+		if (utentiDelMese.size()<2)
+			throw new RuntimeException("testUtentiDelMese fallito ");
+
+		System.out.println(".......testUtentiDelMese fine: PASSED.............");
+	}
+	
+	private static void testPrendiTuttiGliUtentiAdmin(UtenteService utenteServiceInstance) throws Exception {
+		System.out.println(".......testPrendiTuttiGliUtentiAdmin inizio.............");
+
+//		Utente utenteNuovo = new Utente("pippo.rossi", "xxx", "pippo", "rossi", LocalDate.now());
+//		utenteServiceInstance.inserisciNuovo(utenteNuovo);
+		List<Utente> utentiAdmin = utenteServiceInstance.prendiTuttiGliUtentiAdmin();
+		if (utentiAdmin.size()<1)
+			throw new RuntimeException("testPrendiTuttiGliUtentiAdmin fallito ");
+
+		System.out.println(".......testPrendiTuttiGliUtentiAdmin fine: PASSED.............");
+	}
+	
+	private static void testDescrizioniRuoloConUtenti(RuoloService ruoloServiceIstance) throws Exception {
+		System.out.println(".......testDescrizioniRuoloConUtenti inizio.............");
+
+//		Utente utenteNuovo = new Utente("pippo.rossi", "xxx", "pippo", "rossi", LocalDate.now());
+//		utenteServiceInstance.inserisciNuovo(utenteNuovo);
+		List<String> utentiAdmin = ruoloServiceIstance.descrizioniRuoloConUtenti();
+		for (String string : utentiAdmin) {
+			System.out.println(string);
+		}
+		if (utentiAdmin.size()<1)
+			throw new RuntimeException("testDescrizioniRuoloConUtenti fallito ");
+		
+
+		System.out.println(".......testDescrizioniRuoloConUtenti fine: PASSED.............");
+	}
+	
+	
+	private static void testDead() {
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 
 }

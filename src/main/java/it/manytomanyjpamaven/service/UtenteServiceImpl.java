@@ -3,6 +3,7 @@ package it.manytomanyjpamaven.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import it.manytomanyjpamaven.dao.EntityManagerUtil;
 import it.manytomanyjpamaven.dao.RuoloDAO;
@@ -98,11 +99,11 @@ public class UtenteServiceImpl implements UtenteService {
 
 		try {
 			// questo è come il MyConnection.getConnection()
-			entityManager.getTransaction().begin();
+			
 
 			// uso l'injection per il dao
 			utenteDAO.setEntityManager(entityManager);
-
+			entityManager.getTransaction().begin();
 			// eseguo quello che realmente devo fare
 			utenteDAO.insert(utenteInstance);
 
@@ -119,8 +120,24 @@ public class UtenteServiceImpl implements UtenteService {
 
 	@Override
 	public void rimuovi(Long idUtente) throws Exception {
-		// TODO Auto-generated method stub
-
+		
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		
+		try {
+			
+			utenteDAO.setEntityManager(entityManager);
+			entityManager.getTransaction().begin();
+			utenteDAO.delete(utenteDAO.get(idUtente));
+			entityManager.getTransaction().commit();
+			
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		}finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
 	}
 
 	@Override
@@ -210,6 +227,44 @@ public class UtenteServiceImpl implements UtenteService {
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
 
+	}
+
+	@Override
+	public List<Utente> PrendiUtentiCreatiNelMeseENellAnno(int numeroMese, int numeroAnno) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// uso l'injection per il dao
+			utenteDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			return utenteDAO.utentiDelMeseEAnno(numeroMese,numeroAnno);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public List<Utente> prendiTuttiGliUtentiAdmin() throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// uso l'injection per il dao
+			utenteDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			return utenteDAO.utentiAdmin();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
 	}
 
 }
